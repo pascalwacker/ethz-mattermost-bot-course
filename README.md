@@ -1,4 +1,5 @@
-pw
+MATTERMOST BOTS FOR ETHZ INFK HS16
 ==
 
-A Symfony project created on September 27, 2016, 7:20 pm.
+You need to copy the app/config/parameters.yml.dist file to app/config/parameters.yml and add your webhooks, otherwise it won't work  
+Make sure to install all dependencies with composer!
