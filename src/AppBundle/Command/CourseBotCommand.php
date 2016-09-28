@@ -6,7 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CourseBotCommand extends ContainerAwareCommand {
+class CourseBotCommand extends ContainerAwareCommand
+{
     protected function configure()
     {
         $this
@@ -39,68 +40,83 @@ EOT
         $courses = array(
             '1' => array(
                 '1145' => array(
-                    'type'  => 'meal',
+                    'type' => 'meal',
                 ),
-                '1305' => array_merge($diskMath, array(
+                '1245' => array(
+                    'type' => 'day',
+                ),
+                '1255' => array_merge($diskMath, array(
                     'time' => '13:15-15:00',
                     'room' => 'HG E 7',
                     'video' => 'HG E 5',
                 )),
             ),
             '2' => array(
-                '1005' => array_merge($eProg, array(
+                '0945' => array(
+                    'type' => 'day',
+                ),
+                '0955' => array_merge($eProg, array(
                     'time' => '10:15-11:55',
                     'room' => 'ML D 28',
                     'video' => 'ML E 12',
                 )),
                 '1145' => array(
-                    'type'  => 'meal',
+                    'type' => 'meal',
                 ),
             ),
             '3' => array(
-                '1005' => array_merge($linAlg, array(
+                '0945' => array(
+                    'type' => 'day',
+                ),
+                '0955' => array_merge($linAlg, array(
                     'time' => '10:15-11:55',
                     'room' => 'HG E 7',
                     'video' => 'HG E 5',
                 )),
                 '1145' => array(
-                    'type'  => 'meal',
+                    'type' => 'meal',
                 ),
-                '1305' => array_merge($diskMath, array(
+                '1255' => array_merge($diskMath, array(
                     'time' => '13:15-15:00',
                     'room' => 'HG F 1',
                     'video' => 'HG F 3',
                 )),
             ),
             '4' => array(
-                '1005' => array_merge($aUD, array(
+                '0945' => array(
+                    'type' => 'day',
+                ),
+                '0955' => array_merge($aUD, array(
                     'time' => '10:15-11:55',
                     'room' => 'ML D 28',
                     'video' => 'ML E 12',
                 )),
                 '1145' => array(
-                    'type'  => 'meal',
+                    'type' => 'meal',
                 ),
-                '1305' => array_merge($aUD, array(
+                '1255' => array_merge($aUD, array(
                     'time' => '13:15-14:00',
                     'room' => 'ML D 28',
                     'video' => 'ML E 12',
                 )),
             ),
             '5' => array(
-                '0805' => array_merge($linAlg, array(
+                '0745' => array(
+                    'type' => 'day',
+                ),
+                '0755' => array_merge($linAlg, array(
                     'time' => '08:15-10:00',
                     'room' => 'HG E 7',
                     'video' => 'HG E 5',
                 )),
-                '1145' => array(
-                    'type'  => 'meal',
-                ),
-                '1005' => array_merge($eProg, array(
+                '0955' => array_merge($eProg, array(
                     'time' => '10:15-11:55',
                     'room' => 'ML D 28',
                     'video' => 'ML E 12',
                 )),
+                '1145' => array(
+                    'type' => 'meal',
+                ),
             ),
         );
 
@@ -121,7 +137,28 @@ EOT
                 }
 
                 if (is_string($target) && filter_var($target, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED)) {
-                    if (isset($course['type']) && $course['type'] == 'meal') {
+                    if (isset($course['type']) && $course['type'] == 'day') {
+                        $daily = $courses[$day];
+
+
+                        // message body
+                        $body = "Your courses for " . date('d.m.Y') . "\n"
+                        $body .= "\n";
+                        $body .= "| Course | Time | Room | Video | Prof |\n";
+                        $body .= "| --- | --- | --- | --- | --- |\n";
+                        foreach ($daily as $course) {
+                            if (isset($course['type'])) {
+                                continue;
+                            }
+                            $body .= "| " . (isset($course['name']) ? $course['name'] : 'Void') .
+                                " | " . (isset($course['time']) ? $course['time'] : 'Void') .
+                                " | " . (isset($course['room']) ? $course['room'] : 'Void') .
+                                " | " . (isset($course['video']) ? $course['video'] : 'No') .
+                                " | " . (isset($course['prof']) ? $course['prof'] : 'Void') . " |\n";
+                        }
+                        $body .= "\n";
+                        $body .= "The first course will start in 30 minutes der :vorlesungsbot:";
+                    } else if (isset($course['type']) && $course['type'] == 'meal') {
 
                         $json = file_get_contents('https://www.webservices.ethz.ch/gastro/v1/RVRI/Q1E1/meals/de/' . date('Y-m-d') . '/lunch?mensas=12');
                         $response = json_decode($json, true);
@@ -155,7 +192,7 @@ EOT
                             " | " . (isset($course['video']) ? $course['video'] : 'No') .
                             " | " . (isset($course['prof']) ? $course['prof'] : 'Void') . " |\n";
                         $body .= "\n";
-                        $body .= "The course will start in 10 minutes der :vorlesungsbot:";
+                        $body .= "The course will start in 20 minutes der :vorlesungsbot:";
                     }
 
                     // payload construction
