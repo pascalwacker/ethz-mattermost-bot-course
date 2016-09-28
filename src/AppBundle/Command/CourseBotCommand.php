@@ -14,7 +14,7 @@ class CourseBotCommand extends ContainerAwareCommand
             ->setName('eth:mattermost:coursebot')
             ->setDescription('spam the next course we have')
             ->setHelp(<<<EOT
-The <info>eth:mattermost:coursebot</info> command spams the mattermost channel with the next course, 10 min prior to the course. The bot runs as cron job "* 8-18 * * 1-5"
+The <info>eth:mattermost:coursebot</info> command spams the mattermost channel with the next course, 10 min prior to the course. The bot runs as cron job "* 7-18 * * 1-5"
 EOT
             );
     }
@@ -39,9 +39,6 @@ EOT
         );
         $courses = array(
             '1' => array(
-                '1145' => array(
-                    'type' => 'meal',
-                ),
                 '1245' => array(
                     'type' => 'day',
                 ),
@@ -60,9 +57,6 @@ EOT
                     'room' => 'ML D 28',
                     'video' => 'ML E 12',
                 )),
-                '1145' => array(
-                    'type' => 'meal',
-                ),
             ),
             '3' => array(
                 '0945' => array(
@@ -73,9 +67,6 @@ EOT
                     'room' => 'HG E 7',
                     'video' => 'HG E 5',
                 )),
-                '1145' => array(
-                    'type' => 'meal',
-                ),
                 '1255' => array_merge($diskMath, array(
                     'time' => '13:15-15:00',
                     'room' => 'HG F 1',
@@ -91,9 +82,6 @@ EOT
                     'room' => 'ML D 28',
                     'video' => 'ML E 12',
                 )),
-                '1145' => array(
-                    'type' => 'meal',
-                ),
                 '1255' => array_merge($aUD, array(
                     'time' => '13:15-14:00',
                     'room' => 'ML D 28',
@@ -114,9 +102,6 @@ EOT
                     'room' => 'ML D 28',
                     'video' => 'ML E 12',
                 )),
-                '1145' => array(
-                    'type' => 'meal',
-                ),
             ),
         );
 
@@ -158,30 +143,6 @@ EOT
                         }
                         $body .= "\n";
                         $body .= "The first course will start in 30 minutes der :vorlesungsbot:";
-                    } else if (isset($course['type']) && $course['type'] == 'meal') {
-
-                        $json = file_get_contents('https://www.webservices.ethz.ch/gastro/v1/RVRI/Q1E1/meals/de/' . date('Y-m-d') . '/lunch?mensas=12');
-                        $response = json_decode($json, true);
-
-                        if (is_array($response) && count($response)) {
-                            $mensa = array_shift($response);
-                            if (isset($mensa['meals']) && count($mensa['meals'])) {
-                                $body = "Meals for " . $mensa['mensa'] . ":\n";
-                                $body .= "\n";
-                                $body .= "| Name | Type | Description | Price |\n";
-                                $body .= "| --- | --- | --- | --- |\n";
-                                foreach ($mensa['meals'] as $meal) {
-                                    $body .= "| " . (isset($meal['label']) ? $meal['label'] : 'Void') .
-                                        " | " . (isset($meal['type']) ? $meal['type'] : 'Void') .
-                                        " | " . (isset($meal['description']) && count($meal['description']) ? implode(', ', $meal['description']) : 'Void') .
-                                        " | " . (isset($meal['prices']) && isset($meal['prices']['student']) ? $meal['prices']['student'] . ' CHF' : (isset($meal['prices']) && count($meal['prices']) ? array_shift($meal['prices']) . ' CHF' : 'Void')) . " |\n";
-                                }
-                                $body .= "\n";
-                                $body .= "Alle Menüs unter: https://www.ethz.ch/de/campus/gastronomie/menueplaene.html\n";
-                                $body .= "En Guetä wünscht der :vorlesungsbot:";
-                            }
-                        }
-                        // alle: https://www.ethz.ch/de/campus/gastronomie/menueplaene.html
                     } else {
                         // message body
                         $body = "| Course | Time | Room | Video | Prof |\n";

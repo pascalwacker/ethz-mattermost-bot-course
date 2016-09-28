@@ -22,3 +22,4 @@ parameters:
     mattermost:
         webhook:
             coursebot: https://xxx/hooks/yyy
+            mensabot: https://xxx/hooks/yyy
