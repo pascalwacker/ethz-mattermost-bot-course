@@ -142,7 +142,7 @@ EOT
 
 
                         // message body
-                        $body = "Your courses for " . date('d.m.Y') . "\n"
+                        $body = "Your courses for " . date('d.m.Y') . "\n";
                         $body .= "\n";
                         $body .= "| Course | Time | Room | Video | Prof |\n";
                         $body .= "| --- | --- | --- | --- | --- |\n";
