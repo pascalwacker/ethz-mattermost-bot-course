@@ -26,7 +26,7 @@ EOT
             'prof' => 'Ueli Maurer',
         );
         $aUD = array(
-            'name' => 'A%20D (D%20A)',
+            'name' => 'A%26D (D%26A)',
             'prof' => 'Peter Widmayer, Markus Püschel',
         );
         $linAlg = array(
@@ -158,7 +158,7 @@ EOT
 
                     // payload construction
                     $payload = 'payload={"text": "';
-                    $payload .= str_replace("&", '%20', str_replace('"', '\"', $body));
+                    $payload .= str_replace("&", '%26', str_replace('"', '\"', $body));
                     $payload .= '"}';
 
                     // init cURL
