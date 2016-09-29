@@ -60,7 +60,7 @@ EOT
 
             // payload construction
             $payload = 'payload={"text": "';
-            $payload .= $payload .= str_replace("&", '%26', str_replace('"', '\"', $body));
+            $payload .= str_replace("&", '%26', str_replace('"', '\"', $body));
             $payload .= '"}';
 
             // init cURL
